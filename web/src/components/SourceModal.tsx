@@ -38,6 +38,10 @@ const SITE_INFO: Record<string, { description: string; url: string }> = {
     description: 'AI 今日热榜，聚合 arXiv、Anthropic、Hugging Face、Google Research 等 20 个 AI 一手来源',
     url: 'https://aihot.today/',
   },
+  'aihot-news': {
+    description: 'AIHOT 由数字生命卡兹克出品，每天精选 AI 行业动态、模型发布、产品与论文，RSS 保留 50 条',
+    url: 'https://aihot.news/',
+  },
   aibase: {
     description: 'AIbase 中文 AI 资讯，覆盖大模型发布与产业动态',
     url: 'https://www.aibase.com/zh/news',
