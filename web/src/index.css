@@ -79,8 +79,9 @@
   }
 
   /* 资讯条目：没有边框圆角，只有一条细线 */
+  /* 圆角会让 divide-y 的分隔线在两端翘起来，所以这里必须保持直角 */
   .row {
-    @apply block py-4 -mx-3 px-3 rounded-lg transition-colors duration-100;
+    @apply block py-4 -mx-3 px-3 transition-colors duration-100;
   }
 
   .row:hover {
