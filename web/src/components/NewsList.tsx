@@ -1,8 +1,7 @@
 import type { NewsItem } from '../types'
-import { NewsCard } from './NewsCard'
+import { NewsRow } from './NewsRow'
 import { LoadingState } from './LoadingState'
 import { EmptyState } from './EmptyState'
-import { ChevronDown } from 'lucide-react'
 
 interface NewsListProps {
   items: NewsItem[]
@@ -13,36 +12,34 @@ interface NewsListProps {
 }
 
 export function NewsList({ items, loading, error, hasMore, onLoadMore }: NewsListProps) {
-  if (loading && items.length === 0) {
-    return <LoadingState />
-  }
+  if (loading && items.length === 0) return <LoadingState />
 
   if (error) {
     return (
-      <div className="bg-surface dark:bg-surface-dark border border-outline dark:border-outline-dark rounded-lg p-8 text-center">
-        <div className="text-red-600 dark:text-red-400 mb-2 text-title">加载失败</div>
-        <p className="text-body text-ink-secondary dark:text-ink-muted">{error}</p>
+      <div className="py-16 text-center">
+        <p className="text-title text-ink dark:text-ink-dark">加载失败</p>
+        <p className="mt-1 text-meta text-ink-secondary dark:text-ink-dark-secondary">{error}</p>
       </div>
     )
   }
 
-  if (items.length === 0) {
-    return <EmptyState />
-  }
+  if (items.length === 0) return <EmptyState />
 
   return (
-    <div className="space-y-3">
-      {items.map((item, index) => (
-        <NewsCard key={item.id} item={item} index={index} />
-      ))}
+    <div>
+      <div className="divide-y divide-hairline dark:divide-hairline-dark">
+        {items.map((item) => (
+          <NewsRow key={item.id} item={item} />
+        ))}
+      </div>
 
       {hasMore && (
-        <div className="flex justify-center pt-6">
+        <div className="py-8 text-center">
           <button
             onClick={onLoadMore}
-            className="flex items-center gap-2 px-4 py-2 rounded-full border border-outline dark:border-outline-dark text-label text-ink-secondary dark:text-ink-muted hover:bg-surface-variant dark:hover:bg-surface-variant-dark hover:text-ink dark:hover:text-ink-dark transition-colors">
-            <span>加载更多</span>
-            <ChevronDown className="w-4 h-4" />
+            className="rounded-full px-5 py-2 text-title text-primary transition-colors hover:bg-primary-container dark:text-primary-dark dark:hover:bg-primary-container-dark"
+          >
+            加载更多
           </button>
         </div>
       )}

@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🤖 AI News Aggregator
+# AGIgregator
 
-**实时追踪 AI 领域最前沿动态，聚合全球顶级 AI 资讯源**
+**AI 资讯聚合阅读器 —— Google News 式的单栏阅读体验**
 
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/SuYxh/ai-news-aggregator/update-ai-news.yml?label=auto%20update&logo=github)](https://github.com/SuYxh/ai-news-aggregator/actions)
+[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/comegome/ai-news-aggregator/update-ai-news.yml?label=auto%20update&logo=github)](https://github.com/comegome/ai-news-aggregator/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen?logo=node.js)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript)](https://www.typescriptlang.org/)
@@ -22,7 +22,7 @@
 <td width="50%">
 
 ### 📡 多源聚合
-从 **6 个专业平台** + **14 个微信公众号** 实时抓取资讯，覆盖全球 AI 生态
+从 **4 个专业平台** + **14 个微信公众号** 实时抓取资讯，覆盖全球 AI 生态
 
 ### 🧠 智能筛选
 基于关键词匹配的 AI 相关性过滤，从海量信息中精准提取 AI/科技内容
@@ -64,7 +64,7 @@ GitHub Actions 每 2 小时自动抓取，数据永远保持最新
 
 ## 🌐 在线预览
 
-访问 [https://comegome.github.io/ai-news-aggregator/](https://comegome.github.io/ai-news-aggregator/) 查看实时 AI 资讯聚合。
+访问 [https://comegome.github.io/ai-news-aggregator/](https://comegome.github.io/ai-news-aggregator/) 查看 AGIgregator。
 
 **功能特性：**
 - 📱 响应式设计，支持移动端
@@ -78,11 +78,10 @@ GitHub Actions 每 2 小时自动抓取，数据永远保持最新
 
 ## 📊 数据源矩阵
 
-### 聚合平台（6 个）
+### 聚合平台（4 个）
 
 | 平台 | 说明 | 特点 |
 |:-----|:-----|:-----|
-| **AI今日热榜** | AI 热点聚合 | 聚合 arXiv、Anthropic、Hugging Face、Google Research 等 20 个 AI 一手来源 |
 | **Info Flow** | RSS 信息流 | 聚合 Hacker News、V2EX、少数派、IT之家等 12 个技术社区 |
 | **Zeli** | HN 24h 热榜 | Hacker News 24 小时最热，带准确发布时间 |
 | **AIbase** | AI 资讯 | 中文 AI 资讯，覆盖大模型发布与产业动态 |
@@ -122,7 +121,7 @@ GitHub Actions 每 2 小时自动抓取，数据永远保持最新
 
 ```bash
 # 克隆项目
-git clone https://github.com/SuYxh/ai-news-aggregator.git
+git clone https://github.com/comegome/ai-news-aggregator.git
 cd ai-news-aggregator
 
 # 安装依赖
@@ -176,13 +175,13 @@ cd web && pnpm build
   "total_items": 488,
   "source_count": 36,
   "site_stats": [
-    { "site_id": "aihot", "site_name": "AI今日热榜", "count": 280 }
+    { "site_id": "aihot-news", "site_name": "AIHOT", "count": 26 }
   ],
   "items": [
     {
       "id": "abc123...",
-      "site_id": "aihot",
-      "site_name": "AI今日热榜",
+      "site_id": "aihot-news",
+      "site_name": "AIHOT",
       "source": "OpenAI",
       "title": "GPT-5 即将发布",
       "url": "https://...",
@@ -288,6 +287,6 @@ MIT © [SuYxh](https://github.com/SuYxh)
 
 **如果这个项目对你有帮助，欢迎 ⭐ Star 支持！**
 
-[🐛 报告问题](https://github.com/SuYxh/ai-news-aggregator/issues) · [💡 功能建议](https://github.com/SuYxh/ai-news-aggregator/issues)
+[🐛 报告问题](https://github.com/comegome/ai-news-aggregator/issues) · [💡 功能建议](https://github.com/comegome/ai-news-aggregator/issues)
 
 </div>

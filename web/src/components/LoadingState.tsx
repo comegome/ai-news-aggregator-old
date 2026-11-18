@@ -1,19 +1,11 @@
 export function LoadingState() {
   return (
-    <div className="space-y-3">
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className="card p-4 animate-pulse">
-          <div className="flex items-start gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-5 w-16 bg-outline dark:bg-surface-variant-dark rounded-full" />
-                <div className="h-4 w-24 bg-outline dark:bg-surface-variant-dark rounded" />
-              </div>
-              <div className="h-5 w-full bg-outline dark:bg-surface-variant-dark rounded mb-2" />
-              <div className="h-5 w-3/4 bg-outline dark:bg-surface-variant-dark rounded mb-3" />
-              <div className="h-4 w-20 bg-outline dark:bg-surface-variant-dark rounded" />
-            </div>
-          </div>
+    <div className="divide-y divide-hairline dark:divide-hairline-dark">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="py-4">
+          <div className="h-3 w-28 animate-pulse rounded bg-surface-subtle dark:bg-surface-subtle-dark" />
+          <div className="mt-2.5 h-4 w-full animate-pulse rounded bg-surface-subtle dark:bg-surface-subtle-dark" />
+          <div className="mt-2 h-4 w-2/3 animate-pulse rounded bg-surface-subtle dark:bg-surface-subtle-dark" />
         </div>
       ))}
     </div>

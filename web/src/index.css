@@ -1,69 +1,112 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/fonts/roboto-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212,
+    U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/fonts/roboto-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-surface-variant text-ink dark:bg-background-dark dark:text-ink-dark;
-    @apply font-body antialiased;
-    @apply transition-colors duration-200;
+    @apply bg-surface text-ink dark:bg-surface-dark dark:text-ink-dark;
+    @apply font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary-container text-primary-strong;
+  }
+
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-surface dark:bg-surface-dark rounded-lg border border-outline dark:border-outline-dark;
+  /* 搜索框：静止时无边框浅灰，聚焦时变白并浮起 —— 全站唯一的阴影 */
+  .search-field {
+    @apply w-full h-10 pl-11 pr-4 rounded-full bg-surface-subtle dark:bg-surface-subtle-dark;
+    @apply text-title text-ink dark:text-ink-dark placeholder:text-ink-muted;
+    @apply border border-transparent outline-none transition-all duration-150;
   }
 
-  .card-hover {
-    @apply hover:border-primary dark:hover:border-primary-dark;
+  .search-field:hover {
+    @apply bg-white dark:bg-[#3c4043];
   }
 
-  .btn {
-    @apply px-4 py-2 rounded-full text-label transition-colors;
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  .search-field:focus {
+    @apply bg-surface dark:bg-surface-subtle-dark border-transparent shadow-search;
   }
 
-  .btn-primary {
-    @apply bg-primary text-on-primary hover:bg-primary-hover;
+  /* 平台筛选：未选中是描边，选中是浅蓝底深蓝字 */
+  .chip {
+    @apply inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-meta whitespace-nowrap;
+    @apply border border-hairline dark:border-hairline-dark;
+    @apply text-ink-secondary dark:text-ink-dark-secondary;
+    @apply bg-transparent transition-colors duration-150;
   }
 
-  .btn-ghost {
-    @apply text-ink-secondary dark:text-ink-muted hover:bg-surface-variant dark:hover:bg-surface-variant-dark hover:text-ink dark:hover:text-ink-dark;
+  .chip:hover {
+    @apply bg-surface-subtle dark:bg-surface-subtle-dark;
   }
 
-  .input {
-    @apply w-full px-4 py-2 rounded-md border border-outline dark:border-outline-dark;
-    @apply bg-surface dark:bg-surface-dark text-ink dark:text-ink-dark text-body;
-    @apply placeholder:text-ink-muted;
-    @apply focus:outline-none focus:border-primary dark:focus:border-primary-dark;
-    @apply transition-colors;
+  .chip[data-active='true'] {
+    @apply border-transparent bg-primary-container text-primary-strong;
+    @apply dark:bg-primary-container-dark dark:text-primary-dark;
   }
 
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-label;
+  /* 资讯条目：没有边框圆角，只有一条细线 */
+  .row {
+    @apply block py-4 -mx-3 px-3 rounded-lg transition-colors duration-100;
+  }
+
+  .row:hover {
+    @apply bg-surface-subtle dark:bg-surface-subtle-dark;
+  }
+
+  .icon-button {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full;
+    @apply text-ink-secondary dark:text-ink-dark-secondary;
+    @apply hover:bg-surface-subtle dark:hover:bg-surface-subtle-dark transition-colors;
   }
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-surface-variant dark:bg-surface-dark;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-outline dark:bg-outline-dark rounded-full;
+  @apply bg-hairline dark:bg-hairline-dark rounded-full;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-ink-muted;
+  border: 3px solid transparent;
+  background-clip: content-box;
 }

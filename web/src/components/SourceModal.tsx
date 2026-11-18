@@ -1,4 +1,4 @@
-import { X, Globe, CheckCircle, XCircle, Clock, ExternalLink } from 'lucide-react'
+import { X, CheckCircle2, XCircle, ExternalLink } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import type { SiteStat } from '../types'
 
@@ -20,30 +20,24 @@ interface SourceStatus {
     duration_ms: number
     error: string | null
   }[]
-  successful_sites: number
-  failed_sites: string[]
   fetched_raw_items: number
 }
 
 const SITE_INFO: Record<string, { description: string; url: string }> = {
   iris: {
-    description: 'Info Flow 信息流，聚合 Hacker News、V2EX、少数派、IT之家等 12 个技术社区的 RSS',
+    description: '聚合 Hacker News、V2EX、少数派、IT之家等 12 个技术社区的 RSS 信息流',
     url: 'https://iris.findtruman.io/web/info_flow',
   },
   zeli: {
     description: 'Hacker News 24 小时最热榜，带准确发布时间',
     url: 'https://zeli.app/',
   },
-  aihot: {
-    description: 'AI 今日热榜，聚合 arXiv、Anthropic、Hugging Face、Google Research 等 20 个 AI 一手来源',
-    url: 'https://aihot.today/',
-  },
   'aihot-news': {
-    description: 'AIHOT 由数字生命卡兹克出品，每天精选 AI 行业动态、模型发布、产品与论文，RSS 保留 50 条',
+    description: '数字生命卡兹克出品的 AI 精选，每天 50 条，含原文链接',
     url: 'https://aihot.news/',
   },
   aibase: {
-    description: 'AIbase 中文 AI 资讯，覆盖大模型发布与产业动态',
+    description: '中文 AI 资讯，覆盖大模型发布与产业动态',
     url: 'https://www.aibase.com/zh/news',
   },
   'wechat-rss': {
@@ -53,131 +47,100 @@ const SITE_INFO: Record<string, { description: string; url: string }> = {
 }
 
 export function SourceModal({ isOpen, onClose, siteStats, sourceCount, windowHours }: SourceModalProps) {
-  const [sourceStatus, setSourceStatus] = useState<SourceStatus | null>(null)
+  const [status, setStatus] = useState<SourceStatus | null>(null)
 
   useEffect(() => {
     if (!isOpen) return
-    const basePath = import.meta.env.BASE_URL || '/'
-    fetch(`${basePath}data/source-status.json`)
-      .then((res) => res.json())
-      .then((data) => setSourceStatus(data))
+    const base = import.meta.env.BASE_URL || '/'
+    fetch(`${base}data/source-status.json`)
+      .then((r) => r.json())
+      .then(setStatus)
       .catch(() => {})
   }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('keydown', handleEscape)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    document.addEventListener('keydown', onKey)
     document.body.style.overflow = 'hidden'
     return () => {
-      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('keydown', onKey)
       document.body.style.overflow = ''
     }
   }, [isOpen, onClose])
 
   if (!isOpen) return null
 
-  const totalFilteredItems = siteStats.reduce((sum, s) => sum + s.count, 0)
+  const total = siteStats.reduce((sum, s) => sum + s.count, 0)
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
+      <div className="absolute inset-0 bg-black/32 animate-fade-in" onClick={onClose} />
 
-      <div className="relative w-full max-w-2xl bg-surface dark:bg-surface-dark rounded-lg border border-outline dark:border-outline-dark overflow-hidden animate-fade-in">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-outline dark:border-outline-dark">
-          <h2 className="text-headline text-ink dark:text-ink-dark">数据来源</h2>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full text-ink-secondary dark:text-ink-muted hover:bg-surface-variant dark:hover:bg-surface-variant-dark transition-colors"
-            title="关闭"
-          >
-            <X className="w-5 h-5" />
+      <div className="relative flex max-h-[88vh] w-full max-w-lg flex-col overflow-hidden rounded-t-[28px] bg-surface shadow-modal animate-slide-up dark:bg-surface-dark sm:rounded-[28px]">
+        <div className="flex items-start justify-between px-6 pb-2 pt-6">
+          <div>
+            <h2 className="text-wordmark text-ink dark:text-ink-dark">数据来源</h2>
+            <p className="mt-1 text-meta text-ink-secondary dark:text-ink-dark-secondary">
+              最近 {windowHours} 小时 · 从 {status?.fetched_raw_items ?? '—'} 条原始资讯筛选出 {total.toLocaleString()} 条
+            </p>
+          </div>
+          <button onClick={onClose} className="icon-button -mr-2 -mt-1" title="关闭">
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="px-6 py-5 overflow-y-auto max-h-[calc(85vh-80px)]">
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="bg-surface-variant dark:bg-surface-variant-dark rounded-lg p-4 text-center">
-              <p className="text-headline text-ink dark:text-ink-dark">{siteStats.length}</p>
-              <p className="text-label text-ink-secondary dark:text-ink-muted mt-1">数据平台</p>
-            </div>
-            <div className="bg-surface-variant dark:bg-surface-variant-dark rounded-lg p-4 text-center">
-              <p className="text-headline text-ink dark:text-ink-dark">{sourceCount}</p>
-              <p className="text-label text-ink-secondary dark:text-ink-muted mt-1">订阅源</p>
-            </div>
-            <div className="bg-surface-variant dark:bg-surface-variant-dark rounded-lg p-4 text-center">
-              <p className="text-headline text-primary dark:text-primary-dark">
-                {totalFilteredItems.toLocaleString()}
-              </p>
-              <p className="text-label text-ink-secondary dark:text-ink-muted mt-1">AI 资讯</p>
-            </div>
-          </div>
+        <div className="overflow-y-auto px-6 pb-6">
+          {siteStats.map((stat) => {
+            const info = SITE_INFO[stat.site_id]
+            const site = status?.sites.find((s) => s.site_id === stat.site_id)
+            const ok = site?.ok !== false
 
-          <div className="bg-surface-variant dark:bg-surface-variant-dark rounded-lg p-4 mb-6">
-            <div className="flex items-center gap-2 text-label text-ink-secondary dark:text-ink-muted">
-              <Clock className="w-4 h-4" />
-              <span>
-                最近 <strong className="text-ink dark:text-ink-dark">{windowHours} 小时</strong> 内，
-                从 <strong className="text-ink dark:text-ink-dark">{sourceStatus?.fetched_raw_items ?? '-'}</strong> 条原始资讯中
-                筛选出 <strong className="text-ink dark:text-ink-dark">{totalFilteredItems.toLocaleString()}</strong> 条 AI 相关内容
-              </span>
-            </div>
-          </div>
-
-          <h3 className="text-label font-medium text-ink dark:text-ink-dark mb-3 flex items-center gap-2">
-            <Globe className="w-4 h-4" />
-            数据平台详情
-          </h3>
-
-          <div className="space-y-3">
-            {siteStats.map((stat) => {
-              const siteInfo = sourceStatus?.sites.find((s) => s.site_id === stat.site_id)
-              const isOk = siteInfo?.ok !== false
-              const info = SITE_INFO[stat.site_id]
-
-              return (
-                <div
-                  key={stat.site_id}
-                  className="rounded-lg border border-outline dark:border-outline-dark overflow-hidden"
-                >
-                  <div className="flex items-center justify-between p-3 bg-surface dark:bg-surface-variant-dark/50">
-                    <div className="flex items-center gap-3">
-                      {isOk ? (
-                        <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-                      ) : (
-                        <XCircle className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0" />
-                      )}
-                      <span className="text-title text-ink dark:text-ink-dark">{stat.site_name}</span>
-                    </div>
-                    <span className="text-label text-primary dark:text-primary-dark font-medium">
-                      {stat.count} 条
-                    </span>
-                  </div>
-
-                  {info && (
-                    <div className="px-4 pb-4 pt-3 bg-surface-variant dark:bg-surface-dark/50 border-t border-outline dark:border-outline-dark">
-                      <p className="text-label text-ink-secondary dark:text-ink-muted mb-1">
-                        {info.description}
-                      </p>
-                      {info.url && (
-                        <a
-                          href={info.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-label text-primary dark:text-primary-dark hover:underline"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          {info.url}
-                        </a>
-                      )}
-                    </div>
+            return (
+              <div
+                key={stat.site_id}
+                className="border-t border-hairline py-4 first:border-t-0 dark:border-hairline-dark"
+              >
+                <div className="flex items-center gap-2">
+                  {ok ? (
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary dark:text-primary-dark" strokeWidth={1.8} />
+                  ) : (
+                    <XCircle className="h-4 w-4 shrink-0 text-red-600 dark:text-red-400" strokeWidth={1.8} />
                   )}
+                  <span className="text-title text-ink dark:text-ink-dark">{stat.site_name}</span>
+                  <span className="ml-auto text-meta text-ink-secondary dark:text-ink-dark-secondary">
+                    {stat.count} 条
+                  </span>
                 </div>
-              )
-            })}
-          </div>
+
+                {info && (
+                  <p className="mt-1.5 pl-6 text-meta leading-relaxed text-ink-secondary dark:text-ink-dark-secondary">
+                    {info.description}
+                  </p>
+                )}
+
+                {info?.url && (
+                  <a
+                    href={info.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 pl-6 text-meta text-primary hover:underline dark:text-primary-dark"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    {info.url.replace(/^https?:\/\//, '')}
+                  </a>
+                )}
+
+                {site && !site.ok && site.error && (
+                  <p className="mt-1 pl-6 text-meta text-red-600 dark:text-red-400">{site.error}</p>
+                )}
+              </div>
+            )
+          })}
+
+          <p className="border-t border-hairline pt-4 text-meta text-ink-muted dark:border-hairline-dark">
+            共 {sourceCount} 个订阅源，每 2 小时抓取一次。
+          </p>
         </div>
       </div>
     </div>

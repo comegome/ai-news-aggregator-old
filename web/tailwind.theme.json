@@ -6,54 +6,57 @@
         "primary-hover": "#1765cc",
         "primary-dark": "#8ab4f8",
         "on-primary": "#ffffff",
+        "primary-container": "#e8f0fe",
+        "primary-strong": "#1967d2",
+        "primary-container-dark": "#1e2e45",
         "surface": "#ffffff",
-        "surface-variant": "#f8f9fa",
         "surface-dark": "#202124",
-        "surface-variant-dark": "#2d2e31",
-        "background-dark": "#202124",
+        "surface-subtle": "#f8f9fa",
+        "surface-subtle-dark": "#303134",
         "ink": "#202124",
         "ink-secondary": "#5f6368",
         "ink-muted": "#80868b",
         "ink-dark": "#e8eaed",
-        "outline": "#dadce0",
-        "outline-dark": "#3c4043"
+        "ink-dark-secondary": "#9aa0a6",
+        "hairline": "#dadce0",
+        "hairline-dark": "#3c4043"
       },
       "fontFamily": {
+        "wordmark": [
+          "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
+        ],
         "headline": [
-          "Google Sans, Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
+          "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
         ],
         "title": [
           "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
         ],
-        "body": [
-          "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
-        ],
-        "label": [
+        "meta": [
           "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
         ]
       },
       "fontSize": {
+        "wordmark": [
+          "21px",
+          {
+            "letterSpacing": "-0.02em",
+            "fontWeight": "500"
+          }
+        ],
         "headline": [
-          "22px",
-          {
-            "letterSpacing": "-0.01em",
-            "fontWeight": "500"
-          }
-        ],
-        "title": [
-          "16px",
-          {
-            "fontWeight": "500"
-          }
-        ],
-        "body": [
-          "16px",
+          "17px",
           {
             "fontWeight": "400"
           }
         ],
-        "label": [
-          "14px",
+        "title": [
+          "15px",
+          {
+            "fontWeight": "500"
+          }
+        ],
+        "meta": [
+          "13px",
           {
             "fontWeight": "400"
           }
@@ -63,6 +66,7 @@
         "sm": "4px",
         "md": "8px",
         "lg": "12px",
+        "xl": "28px",
         "full": "9999px"
       },
       "spacing": {

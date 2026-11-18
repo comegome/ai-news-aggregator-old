@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { Header } from './components/Header'
-import { StatsCards } from './components/StatsCards'
+import { AppBar } from './components/AppBar'
 import { FilterBar } from './components/FilterBar'
 import { NewsList } from './components/NewsList'
 import { SourceModal } from './components/SourceModal'
-import { SwitchingOverlay } from './components/SwitchingOverlay'
 import { useTheme } from './hooks/useTheme'
 import { useNewsData } from './hooks/useNewsData'
+import { formatDateTime } from './utils/formatDate'
 
 function App() {
   const { theme, toggleTheme } = useTheme()
@@ -33,29 +32,16 @@ function App() {
   } = useNewsData()
 
   return (
-    <div className="min-h-screen bg-surface-variant dark:bg-background-dark">
-      <Header
+    <div className="min-h-screen bg-surface dark:bg-surface-dark">
+      <AppBar
         theme={theme}
         toggleTheme={toggleTheme}
-        generatedAt={data?.generated_at}
-        windowHours={data?.window_hours}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         onShowSources={() => setShowSourceModal(true)}
-        timeRange={timeRange}
-        onTimeRangeChange={setTimeRange}
-        isSwitching={isSwitching}
       />
 
-      {isSwitching && <SwitchingOverlay timeRange={timeRange} />}
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        <StatsCards
-          totalItems={data?.total_items || 0}
-          sourceCount={data?.source_count || 0}
-          windowHours={data?.window_hours || 24}
-          siteStats={siteStats}
-          onShowSources={() => setShowSourceModal(true)}
-        />
-
+      <main className="mx-auto max-w-3xl px-4 pt-2">
         <FilterBar
           siteStats={siteStats}
           sourceStats={sourceStats}
@@ -63,8 +49,11 @@ function App() {
           onSiteChange={setSelectedSite}
           selectedSource={selectedSource}
           onSourceChange={setSelectedSource}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          totalItems={data?.total_items ?? 0}
+          sourceCount={data?.source_count ?? 0}
+          timeRange={timeRange}
+          onTimeRangeChange={setTimeRange}
+          isSwitching={isSwitching}
         />
 
         <NewsList
@@ -76,11 +65,14 @@ function App() {
         />
       </main>
 
-      <footer className="border-t border-outline dark:border-outline-dark py-8 mt-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-label text-ink-secondary dark:text-ink-muted">
-            AI 资讯聚合 · 数据来源于多个 AI 资讯平台
-          </p>
+      <footer className="border-t border-hairline dark:border-hairline-dark">
+        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-meta text-ink-muted">
+          <span>
+            <span className="text-primary dark:text-primary-dark">AGI</span>gregator
+          </span>
+          <span>
+            {data?.generated_at ? `更新于 ${formatDateTime(data.generated_at)} · 每 2 小时` : '数据加载中'}
+          </span>
         </div>
       </footer>
 
@@ -88,8 +80,8 @@ function App() {
         isOpen={showSourceModal}
         onClose={() => setShowSourceModal(false)}
         siteStats={siteStats}
-        sourceCount={data?.source_count || 0}
-        windowHours={data?.window_hours || 24}
+        sourceCount={data?.source_count ?? 0}
+        windowHours={data?.window_hours ?? 24}
       />
     </div>
   )

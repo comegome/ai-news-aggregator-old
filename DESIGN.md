@@ -1,45 +1,48 @@
 ---
 version: alpha
-name: AI News Aggregator
-description: Google Material 3 风格的 AI 资讯阅读界面。英文优先、中文兜底，留白宽松，层级靠字号与描边而非阴影。
+name: AGIgregator
+description: 一个 Google News 式的 AI 资讯阅读器。单栏阅读列、细线分隔、单一蓝色强调色，不画卡片、不用阴影。
 
 colors:
   primary: "#1A73E8"
   primary-hover: "#1765CC"
   primary-dark: "#8AB4F8"
   on-primary: "#FFFFFF"
+  primary-container: "#E8F0FE"
+  primary-strong: "#1967D2"
+  primary-container-dark: "#1E2E45"
   surface: "#FFFFFF"
-  surface-variant: "#F8F9FA"
   surface-dark: "#202124"
-  surface-variant-dark: "#2D2E31"
-  background-dark: "#202124"
+  surface-subtle: "#F8F9FA"
+  surface-subtle-dark: "#303134"
   ink: "#202124"
   ink-secondary: "#5F6368"
   ink-muted: "#80868B"
   ink-dark: "#E8EAED"
-  outline: "#DADCE0"
-  outline-dark: "#3C4043"
+  ink-dark-secondary: "#9AA0A6"
+  hairline: "#DADCE0"
+  hairline-dark: "#3C4043"
 
 typography:
-  headline:
-    fontFamily: "Google Sans, Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
-    fontSize: 22px
+  wordmark:
+    fontFamily: "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
+    fontSize: 21px
     fontWeight: 500
-    lineHeight: 1.3
-    letterSpacing: "-0.01em"
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
+    fontSize: 17px
+    fontWeight: 400
+    lineHeight: 1.45
   title:
     fontFamily: "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
-    fontSize: 16px
+    fontSize: 15px
     fontWeight: 500
-    lineHeight: 1.5
-  body:
+    lineHeight: 1.4
+  meta:
     fontFamily: "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
-    fontSize: 16px
-    fontWeight: 400
-    lineHeight: 1.5
-  label:
-    fontFamily: "Roboto, 'Noto Sans SC', 'PingFang SC', sans-serif"
-    fontSize: 14px
+    fontSize: 13px
     fontWeight: 400
     lineHeight: 1.4
 
@@ -47,6 +50,7 @@ rounded:
   sm: 4px
   md: 8px
   lg: 12px
+  xl: 28px
   full: 9999px
 
 spacing:
@@ -57,117 +61,151 @@ spacing:
   xl: 32px
 
 components:
-  page:
-    backgroundColor: "{colors.surface-variant}"
-    textColor: "{colors.ink}"
-    typography: "{typography.body}"
-  page-dark:
-    backgroundColor: "{colors.background-dark}"
-    textColor: "{colors.ink-dark}"
-  card:
+  appbar:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    typography: "{typography.title}"
-    rounded: "{rounded.lg}"
-    padding: 16px
-  card-dark:
+    height: 64px
+  appbar-dark:
     backgroundColor: "{colors.surface-dark}"
     textColor: "{colors.ink-dark}"
+  wordmark-accent:
+    textColor: "{colors.primary}"
+    typography: "{typography.wordmark}"
+  wordmark-accent-dark:
+    textColor: "{colors.primary-dark}"
+  search:
+    backgroundColor: "{colors.surface-subtle}"
+    textColor: "{colors.ink}"
+    typography: "{typography.title}"
+    rounded: "{rounded.full}"
+    padding: 10px
+  search-dark:
+    backgroundColor: "{colors.surface-subtle-dark}"
+    textColor: "{colors.ink-dark}"
+  search-placeholder:
+    textColor: "{colors.ink-muted}"
+  chip:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink-secondary}"
+    typography: "{typography.meta}"
+    rounded: "{rounded.full}"
+    padding: 6px
+  chip-dark:
+    backgroundColor: "{colors.surface-dark}"
+    textColor: "{colors.ink-dark-secondary}"
+  chip-selected:
+    backgroundColor: "{colors.primary-container}"
+    textColor: "{colors.primary-strong}"
+  chip-selected-dark:
+    backgroundColor: "{colors.primary-container-dark}"
+    textColor: "{colors.primary-dark}"
+  row:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    padding: 16px
+  row-hover:
+    backgroundColor: "{colors.surface-subtle}"
+  row-hover-dark:
+    backgroundColor: "{colors.surface-subtle-dark}"
   divider:
-    backgroundColor: "{colors.outline}"
+    backgroundColor: "{colors.hairline}"
     height: 1px
   divider-dark:
-    backgroundColor: "{colors.outline-dark}"
+    backgroundColor: "{colors.hairline-dark}"
     height: 1px
+  headline-text:
+    textColor: "{colors.ink}"
+    typography: "{typography.headline}"
+  headline-text-dark:
+    textColor: "{colors.ink-dark}"
+  meta-text:
+    textColor: "{colors.ink-secondary}"
+    typography: "{typography.meta}"
+  meta-text-dark:
+    textColor: "{colors.ink-dark-secondary}"
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
-    typography: "{typography.label}"
+    typography: "{typography.title}"
     rounded: "{rounded.full}"
     padding: 8px
   button-primary-hover:
     backgroundColor: "{colors.primary-hover}"
-    textColor: "{colors.on-primary}"
-  chip:
-    backgroundColor: "{colors.surface-variant}"
-    textColor: "{colors.ink-secondary}"
-    typography: "{typography.label}"
-    rounded: "{rounded.full}"
-    padding: 4px
-  chip-dark:
-    backgroundColor: "{colors.surface-variant-dark}"
-    textColor: "{colors.ink-dark}"
-  chip-active:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.on-primary}"
-  input:
+  modal:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.md}"
-    padding: 8px
-  input-placeholder:
-    textColor: "{colors.ink-muted}"
-  link:
-    textColor: "{colors.primary}"
-    typography: "{typography.body}"
-  link-dark:
-    textColor: "{colors.primary-dark}"
+    rounded: "{rounded.xl}"
+    padding: 24px
+  modal-dark:
+    backgroundColor: "{colors.surface-dark}"
+    textColor: "{colors.ink-dark}"
 ---
 
 ## Overview
 
-这是一个个人使用的 AI 资讯阅读器：每两小时抓取一次，前端只做一件事——让人快速扫读标题、判断哪条值得点开。因此视觉上追求 Google 式的克制：白底、单一蓝色强调色、描边代替阴影、字号分三级、留白大于密度。
+这不是「卡片流」，是**一张报纸的阅读列**。
 
-风格来源是 Material 3 与 Google News 的阅读列表，不是任何「科技感」模板。不使用渐变、不使用彩色标签墙、不使用大圆角卡片堆叠。
+参考对象是 Google News 的搜索结果页和 Google 搜索的顶栏，不是任何仪表盘模板。整个页面只有一条 720px 宽的竖列，条目之间用 1px 细线分隔，没有边框、没有阴影、没有圆角卡片。鼠标悬停时整行背景变浅灰——这是 Google 搜索结果唯一的交互反馈。
+
+判定标准：把截图缩到 30% 大小，如果第一眼看到的是「一堆方块」，就说明还没做到。
 
 ## Colors
 
-- **Primary (#1A73E8)** —— Google Blue 600。全站唯一的强调色：链接、选中态、主按钮。白色文字在其上对比度 4.51:1，刚好达到 WCAG AA。
-- **Primary Dark (#8AB4F8)** —— 深色模式下的强调色。蓝色在白底上够暗，在深底上则必须提亮，否则读不清。配 #202124 对比度约 7.4:1。
-- **Ink (#202124)** —— 正文主色，不是纯黑。纯黑在屏幕上过硬，Google 的灰阶在长时间阅读时更稳。
-- **Ink Secondary (#5F6368)** —— 来源名、时间戳、辅助说明。
-- **Ink Muted (#80868B)** —— 占位符、悬停才出现的图标，最低一级信息。
-- **Surface (#FFFFFF) / Surface Variant (#F8F9FA)** —— 卡片白、页面底色微灰。两者的差别很小，正是为了让卡片浮起来又不靠阴影。
-- **Outline (#DADCE0)** —— 1px 描边。卡片边界、分隔线都靠它，替代阴影。
+- **Primary #1A73E8** —— 全站唯一强调色。只出现在三处：词标里的「AGI」、选中态的文字与浅蓝底、文字按钮。
+- **Primary Container #E8F0FE** —— 选中 chip 的底色。Google 的选中态是**浅底深字**，不是深底白字；这一条是 M3 与「网页版 Bootstrap 风」最大的分野。
+- **Surface #FFFFFF / Surface Subtle #F8F9FA** —— 页面白，悬停灰。两者只差一个色阶，靠细线而非边框分隔。
+- **Ink #202124** —— 正文。不是纯黑。
+- **Ink Secondary #5F6368** —— 来源名、时间。**比标题浅一档**，视线先落在标题上。
+- **Hairline #DADCE0** —— 1px 分隔线。全站唯一的「结构线」，不用它画框。
+
+深色模式把 Surface 换成 #202124、悬停换成 #303134、强调色提亮到 #8AB4F8。深底上蓝色必须提亮，否则对比度不足。
 
 ## Typography
 
-字体栈是 `Google Sans / Roboto → Noto Sans SC → PingFang SC`。拉丁字形由前两个渲染，中日韩字形自动回落到思源黑体或苹方，两者字面高度接近，中英混排不会出现一行里字重忽粗忽细。
+Roboto 自托管（`web/public/fonts/`，variable 单文件，latin + latin-ext 共 61KB），中文回落到 PingFang SC / 思源黑体。**不引 Google Fonts CDN**——中国大陆访问不到，会白屏一秒。
 
-字号只有四级：headline 22 / title 16 / body 16 / label 14。中文网页常见的 12px 辅助文字在这里被抬到 14px，行高统一 1.4–1.5。这是「不中式」最直接的来源——不是换颜色，是给文字留够呼吸空间。
+字号只有四级：
 
-标题不再使用 bold 700，改用 500。Material 的层级靠字号和颜色，不靠加粗。
+- **wordmark 21 / 500** —— 只用于标题「AGIgregator」
+- **headline 17 / 400** —— 资讯标题。**常规字重**，不加粗。Google News 的标题就是常规体，靠字号和位置区分层级
+- **title 15 / 500** —— 弹窗标题、按钮
+- **meta 13 / 400** —— 来源、时间、统计
+
+中文没有小写字母，常规字重下笔画密度天然高于英文，所以标题**绝不能**再用 700——这正是「中式」的来源之一。
 
 ## Layout
 
-最大宽度 1152px（`max-w-6xl`），左右内边距 16/24/32px 三档响应式。列表条目之间 12px，区块之间 24px。卡片内边距 16px 竖向、20px 横向。
+- 顶栏 64px，吸顶，底部一条细线
+- 正文列 `max-width: 720px`，水平居中，左右 16px 内边距
+- 条目：上 16px / 下 16px，无左右内边距（悬停时用负边距 + 12px 内边距铺满，视觉上不留白）
+- 条目内：来源名 13px → 标题 17px（间距 4px）→ 副来源 13px（可选）
 
-间距基准是 4px 栅格：4 / 8 / 16 / 24 / 32。
+720px 是刻意的：Google News 的阅读列大约 600–740px。放宽到 1152px 会让标题横跨一屏，眼睛无法一次扫完一行。
 
 ## Elevation & Depth
 
-**不使用阴影。** 卡片与页面背景只差一个色阶（#FFFFFF vs #F8F9FA），边界由 1px #DADCE0 描边给出。悬停时描边变为主色，不做位移、不加投影。
+**没有阴影，除了一个地方：搜索框聚焦。**
 
-这是刻意的：原实现用 `shadow-sm` 加 `hover:shadow-md` 加 `-translate-y-0.5`，三层效果叠加，在深色模式下阴影几乎不可见却仍在渲染。
+Google 搜索框静止时是无边框的浅灰圆角矩形；聚焦时变白并浮起一层 `0 1px 6px rgba(32,33,36,.28)`。这个「从平面到浮起」的转换是全站唯一的立体感来源，用它标记「你正在输入」。
 
 ## Shapes
 
-圆角三档：4px（小控件）、8px（输入框）、12px（卡片），以及全圆（按钮、标签）。
-
-不使用大于 12px 的圆角，也不做「药丸卡片」。
+- 圆角：4 / 8 / 12 / 28 / 全圆
+- 搜索框、chip、按钮：全圆
+- 弹窗：28px（M3 dialog 的规格）
+- **条目：0 圆角**——列表项不是卡片
 
 ## Components
 
-- `card` —— 资讯条目。白底、1px 描边、12px 圆角。悬停时描边变蓝。
-- `chip` / `chip-active` —— 站点筛选标签。未选中是灰底灰字，选中是蓝底白字。
-- `button-primary` —— 只在「加载更多」这类单一动作上使用。
-- `input` —— 搜索框。聚焦时描边变蓝，不加外发光。
+- `appbar` —— 左词标，中搜索框，右主题切换。移动端搜索框折到第二行。
+- `chip` —— 平台筛选。未选中是**描边**（1px hairline + 透明底），选中是浅蓝底 + 蓝字。
+- `row` —— 资讯条目。悬停整行变 #F8F9FA。
+- `button-primary` —— 只有「加载更多」用，且是文字按钮形态。
 
 ## Do's and Don'ts
 
-- **Do** 用描边和留白区分层级。
-- **Do** 保持全站只有一个强调色。
-- **Don't** 加渐变、发光、玻璃拟态。头部那条 `backdrop-blur` 是唯一例外。
-- **Don't** 用阴影表达悬停；用描边颜色变化。
-- **Don't** 把字号压到 12px 以下——中文在 12px 下笔画会糊。
+- **Do** 用留白和细线分层，不用容器。
+- **Do** 让标题比元信息明显更大、更黑，但不更粗。
+- **Don't** 给列表项加边框、圆角、阴影——那是卡片，不是报纸。
+- **Don't** 用深色底 + 白字的选中态。
+- **Don't** 从 CDN 拉字体。
