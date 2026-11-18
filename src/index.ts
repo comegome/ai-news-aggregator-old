@@ -124,12 +124,10 @@ async function main(): Promise<number> {
       total_items: items.length,
       site_count: siteStat.size,
       source_count: new Set(items.map((i) => `${i.site_id}::${i.source}`)).size,
-      site_stats: Array.from(siteStat.values()).sort((a, b) => {
-        // 微信公众号不是聚合平台，固定排在所有平台后面
-        if (a.site_id === 'wechat-rss') return 1;
-        if (b.site_id === 'wechat-rss') return -1;
-        return b.count - a.count;
-      }),
+      // 按名称字母序，大小写不敏感；中文（微信公众号）在 ICU 排序里天然排在拉丁字母之后
+      site_stats: Array.from(siteStat.values()).sort((a, b) =>
+        a.site_name.localeCompare(b.site_name, 'en', { sensitivity: 'base' })
+      ),
       items,
     };
   }
