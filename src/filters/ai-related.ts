@@ -1,13 +1,12 @@
 import { CONFIG } from '../config.js';
-import { hasMojibakeNoise } from '../utils/text.js';
-import type { ArchiveItem } from '../types.js';
+import type { NewsItem } from '../types.js';
 
 function containsAnyKeyword(haystack: string, keywords: string[]): boolean {
   const h = haystack.toLowerCase();
   return keywords.some((k) => h.includes(k));
 }
 
-export function isAiRelated(record: ArchiveItem): boolean {
+export function isAiRelated(record: NewsItem): boolean {
   const siteId = (record.site_id || '').toLowerCase();
   const title = record.title || '';
   const source = record.source || '';
@@ -19,20 +18,7 @@ export function isAiRelated(record: ArchiveItem): boolean {
     return source.toLowerCase().includes('24h') || source.includes('24h最热');
   }
 
-  if (siteId === 'tophub') {
-    const sourceL = source.toLowerCase();
-    if (hasMojibakeNoise(source) || hasMojibakeNoise(title)) {
-      return false;
-    }
-    if (containsAnyKeyword(sourceL, CONFIG.filter.tophubBlockKeywords)) {
-      return false;
-    }
-    if (!containsAnyKeyword(sourceL, CONFIG.filter.tophubAllowKeywords)) {
-      return false;
-    }
-  }
-
-  if (['aibase', 'aihot', 'aihubtoday'].includes(siteId)) {
+  if (['aibase', 'aihot'].includes(siteId)) {
     return true;
   }
 

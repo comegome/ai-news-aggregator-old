@@ -1,6 +1,9 @@
 feeds/*.opml
 !feeds/*.example.opml
 
+# Generated data snapshots — CI artifacts only, never committed
+data/
+
 # Dependencies
 node_modules/
 

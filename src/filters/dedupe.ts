@@ -1,57 +1,50 @@
-import type { ArchiveItem } from '../types.js';
+import type { NewsItem } from '../types.js';
 import { normalizeUrl } from '../utils/url.js';
 import { parseISO } from '../utils/date.js';
 
-function eventTime(record: ArchiveItem): Date | null {
-  if (record.site_id === 'opmlrss') {
-    return parseISO(record.published_at);
-  }
-  return parseISO(record.published_at) || parseISO(record.first_seen_at);
+function eventTime(item: NewsItem): Date | null {
+  return parseISO(item.published_at);
 }
 
-export function dedupeItemsByTitleUrl(
-  items: ArchiveItem[],
-  randomPick: boolean = true
-): ArchiveItem[] {
-  const groups = new Map<string, ArchiveItem[]>();
+/** 同一组里保留发布最早的一条（最接近原始出处），时间相同则按 id 稳定排序。 */
+function pickEarliest(group: NewsItem[]): NewsItem {
+  return group.reduce((best, current) => {
+    const bt = eventTime(best);
+    const ct = eventTime(current);
+    if (!bt && !ct) return best.id <= current.id ? best : current;
+    if (!bt) return current;
+    if (!ct) return best;
+    if (ct < bt) return current;
+    if (ct > bt) return best;
+    return best.id <= current.id ? best : current;
+  });
+}
 
+/**
+ * 两轮去重：
+ *   1. 规范化 URL 相同 —— 同一条链接被多个聚合平台收录
+ *   2. 标题相同 —— 转载、不同短链指向同一篇
+ * 只保留发布最早的一条，并保证结果按发布时间倒序。
+ */
+export function dedupeItems(items: NewsItem[]): NewsItem[] {
+  const byUrl = new Map<string, NewsItem[]>();
   for (const item of items) {
-    const siteId = (item.site_id || '').toLowerCase();
-    const title = (item.title_original || item.title || '').toLowerCase();
     const url = normalizeUrl(item.url || '');
-
-    const key = siteId === 'aihubtoday' ? `url::${url}` : `${title}||${url}`;
-
-    if (!groups.has(key)) {
-      groups.set(key, []);
-    }
-    groups.get(key)!.push(item);
+    const key = url || `id::${item.id}`;
+    if (!byUrl.has(key)) byUrl.set(key, []);
+    byUrl.get(key)!.push(item);
   }
 
-  const result: ArchiveItem[] = [];
+  const firstPass = Array.from(byUrl.values()).map(pickEarliest);
 
-  for (const values of groups.values()) {
-    if (values.length === 0) continue;
-
-    if (randomPick) {
-      const randomIndex = Math.floor(Math.random() * values.length);
-      result.push(values[randomIndex]);
-    } else {
-      const chosen = values.reduce((best, current) => {
-        const bestTime = eventTime(best);
-        const currentTime = eventTime(current);
-        if (!bestTime && !currentTime) {
-          return (best.id || '') > (current.id || '') ? best : current;
-        }
-        if (!bestTime) return current;
-        if (!currentTime) return best;
-        if (currentTime > bestTime) return current;
-        if (currentTime < bestTime) return best;
-        return (best.id || '') > (current.id || '') ? best : current;
-      });
-      result.push(chosen);
-    }
+  const byTitle = new Map<string, NewsItem[]>();
+  for (const item of firstPass) {
+    const key = (item.title || '').toLowerCase().replace(/\s+/g, ' ').trim() || `id::${item.id}`;
+    if (!byTitle.has(key)) byTitle.set(key, []);
+    byTitle.get(key)!.push(item);
   }
+
+  const result = Array.from(byTitle.values()).map(pickEarliest);
 
   result.sort((a, b) => {
     const timeA = eventTime(a)?.getTime() ?? 0;
@@ -60,66 +53,4 @@ export function dedupeItemsByTitleUrl(
   });
 
   return result;
-}
-
-function isHubtodayPlaceholderTitle(title: string): boolean {
-  const t = (title || '').trim();
-  if (!t) return true;
-  if (t.includes('详情见官方介绍')) return true;
-  return ['原文链接', '查看详情', '点击查看', '详情'].includes(t);
-}
-
-function isHubtodayGenericAnchorTitle(title: string): boolean {
-  const t = (title || '').trim();
-  if (!t) return true;
-  if (isHubtodayPlaceholderTitle(t)) return true;
-  return /\(AI资讯\)\s*$/.test(t);
-}
-
-export function normalizeAihubTodayRecords(items: ArchiveItem[]): ArchiveItem[] {
-  const byUrl = new Map<string, ArchiveItem[]>();
-  const keep: ArchiveItem[] = [];
-
-  for (const item of items) {
-    if (item.site_id !== 'aihubtoday') {
-      keep.push(item);
-      continue;
-    }
-    const url = normalizeUrl(item.url || '');
-    if (!url) continue;
-    if (!byUrl.has(url)) {
-      byUrl.set(url, []);
-    }
-    byUrl.get(url)!.push(item);
-  }
-
-  for (const group of byUrl.values()) {
-    if (group.length === 0) continue;
-
-    const preferred = group.filter((g) => !isHubtodayGenericAnchorTitle(g.title || ''));
-    const source = preferred.length > 0 ? preferred : group;
-
-    const best = source.reduce((best, current) => {
-      const bestTime = eventTime(best);
-      const currentTime = eventTime(current);
-      if (!bestTime && !currentTime) {
-        return (best.id || '') > (current.id || '') ? best : current;
-      }
-      if (!bestTime) return current;
-      if (!currentTime) return best;
-      if (currentTime > bestTime) return current;
-      if (currentTime < bestTime) return best;
-      return (best.id || '') > (current.id || '') ? best : current;
-    });
-
-    keep.push(best);
-  }
-
-  keep.sort((a, b) => {
-    const timeA = eventTime(a)?.getTime() ?? 0;
-    const timeB = eventTime(b)?.getTime() ?? 0;
-    return timeB - timeA;
-  });
-
-  return keep;
 }

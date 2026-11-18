@@ -8,44 +8,6 @@ export const CONFIG = {
     retryStatusCodes: [429, 500, 502, 503, 504],
   },
 
-  rss: {
-    defaultOpmlPath: './feeds/follow.opml',
-    maxConcurrency: 20,
-    feedTimeout: 60000,
-    replacements: {
-      'https://rsshub.app/infoq/recommend': 'https://www.infoq.cn/feed',
-      'https://rsshub.app/huggingface/blog-zh': 'https://huggingface.co/blog/feed.xml',
-      'https://rsshub.app/readhub/daily': 'https://readhub.cn/rss',
-      'https://rsshub.app/36kr/hot-list': 'https://36kr.com/feed',
-      'https://rsshub.app/sspai/index': 'https://sspai.com/feed',
-      'https://rsshub.app/sspai/matrix': 'https://sspai.com/feed',
-      'https://rsshub.app/meituan/tech': 'https://tech.meituan.com/feed',
-      'https://mjg59.dreamwidth.org/data/rss': 'http://mjg59.dreamwidth.org/data/rss',
-    } as Record<string, string>,
-    skipPrefixes: [
-      'https://rsshub.app/telegram/channel/',
-      'https://rsshub.app/jike/',
-      'https://rsshub.app/bilibili/',
-      'https://rsshub.app/zhihu/',
-      'https://rsshub.app/xiaoyuzhou/podcast/',
-      'https://rsshub.app/xyzrank',
-      'https://rsshub.app/mittrchina/hot',
-      'https://wechat2rss.bestblogs.dev/',
-      'https://werss.bestblogs.dev/',
-      'http://47.122.94.119:18080/',
-    ],
-    skipExact: new Set([
-      'https://rachelbythebay.com/w/atom.xml',
-      'https://flak.tedunangst.com/rss',
-    ]),
-  },
-
-  waytoagi: {
-    defaultUrl:
-      'https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e?fromScene=spaceOverview',
-    historyFallback: 'https://waytoagi.feishu.cn/wiki/FjiOwWp2giA7hRk6jjfcPioCnAc',
-  },
-
   timezone: 'Asia/Shanghai',
 
   filter: {
@@ -108,34 +70,6 @@ export const CONFIG = {
       '补贴',
       '下单',
       '首发价',
-    ],
-    tophubAllowKeywords: [
-      'readhub · ai',
-      'hacker news',
-      'github',
-      'product hunt',
-      'v2ex',
-      '少数派',
-      'infoq',
-      '36氪',
-      '机器之心',
-      '量子位',
-      '科技',
-      '人工智能',
-      '机器人',
-      '具身',
-      '开源',
-    ],
-    tophubBlockKeywords: [
-      '热销总榜',
-      '淘宝',
-      '天猫',
-      '京东',
-      '拼多多',
-      '抖音',
-      '快手',
-      '微博',
-      '小红书',
     ],
     enSignalPattern:
       /(?<![a-z0-9])(ai|aigc|llm|gpt|openai|anthropic|deepseek|gemini|claude|robot|robotics|embodied|autonomous|machine learning|artificial intelligence|transformer|diffusion|agent)(?![a-z0-9])/i,
