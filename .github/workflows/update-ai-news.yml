@@ -7,7 +7,8 @@ on:
     paths-ignore:
       - "data/**"
   schedule:
-    - cron: "0 */2 * * *"
+    # 避开整点：GitHub 的 cron 在 0 分最拥堵，整点触发经常被延迟或丢弃
+    - cron: "17 */2 * * *"
 
 permissions:
   contents: read
