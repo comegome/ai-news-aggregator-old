@@ -1,0 +1,19 @@
+name: Schedule Probe
+# 临时探针：验证本仓库的 schedule 事件是否真的会触发。
+# 每 5 分钟一次，只 echo 时间，不碰数据、不部署。验证完即删除。
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report
+        run: |
+          echo "probe fired at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "event=${{ github.event_name }} schedule=${{ github.event.schedule }}"
