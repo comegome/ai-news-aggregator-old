@@ -27,15 +27,11 @@ export function FilterBar({
   return (
     <div className="card p-4 space-y-4">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ink-muted" />
         <input
-          id="search-input"
-          type="text"
-          placeholder="搜索资讯标题、来源..."
-          value={searchQuery}
+          id="search-input"type="text"placeholder="搜索资讯标题、来源..."value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="input pl-10"
-        />
+          className="input pl-10"/>
       </div>
       
       <SiteFilters
