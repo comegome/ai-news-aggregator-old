@@ -2,6 +2,10 @@ name: Update AI News Snapshot
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "data/**"
   schedule:
     - cron: "0 */2 * * *"
 
