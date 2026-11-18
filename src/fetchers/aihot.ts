@@ -96,9 +96,18 @@ interface AiHotSource {
   title?: string;
 }
 
-const BASE_URL = 'https://aihot.today/';
+const DIRECT_URL = 'https://aihot.today/';
 
-function parsePage(
+/**
+ * GitHub Actions 的 Azure IP 会被站点前面的 Cloudflare 拦下（返回 5KB 风控页），
+ * 本机/普通 VPS 直连正常。所以先直连，失败再走 r.jina.ai 代理（该服务会渲染页面并回传 HTML）。
+ */
+const ATTEMPTS: { url: string; headers?: Record<string, string> }[] = [
+  { url: DIRECT_URL },
+  { url: `https://r.jina.ai/${DIRECT_URL}`, headers: { 'X-Return-Format': 'html' } },
+];
+
+export function parsePage(
   html: string
 ): { initialData: Record<string, AiHotItem[]>; sourceList: AiHotSource[] } | null {
   let initialData: Record<string, AiHotItem[]> | null = null;
@@ -185,19 +194,16 @@ export class AiHotFetcher extends BaseFetcher {
   }> {
     let lastSize = 0;
 
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const url = attempt === 0 ? BASE_URL : `${BASE_URL}?_=${Date.now()}`;
-      const html = await fetchText(url);
+    for (const attempt of ATTEMPTS) {
+      const html = await fetchText(attempt.url, attempt.headers ? { headers: attempt.headers } : {});
       lastSize = html.length;
 
       const parsed = parsePage(html);
       if (parsed) return parsed;
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
     }
 
     throw new Error(
-      `页面解析失败：${lastSize} 字节的响应里找不到 initialDataMap/dataSources（疑似风控页或站点改版）`
+      `直连与代理均解析失败：最后一次响应 ${lastSize} 字节，找不到 initialDataMap/dataSources`
     );
   }
 }
