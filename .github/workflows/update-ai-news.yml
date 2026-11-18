@@ -59,7 +59,9 @@ jobs:
             --dist web/dist \
             --data data \
             --site https://comegome.github.io/ai-news-aggregator \
-            --base /ai-news-aggregator/
+            --base /ai-news-aggregator/ \
+            --noindex \
+            --canonical https://agigregator.yuzhaizu.com/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

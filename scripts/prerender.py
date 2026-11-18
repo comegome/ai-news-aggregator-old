@@ -63,7 +63,7 @@ def relative_time(published: datetime | None, now: datetime) -> str:
     return f"{days} 天前" if days < 8 else published.strftime("%m-%d")
 
 
-def build_meta(data: dict, site: str, base: str) -> str:
+def build_meta(data: dict, site: str, base: str, noindex: bool = False, canonical: str | None = None) -> str:
     sites = "、".join(s["site_name"] for s in data.get("site_stats", [])[:5])
     total = data.get("total_items", 0)
     hours = data.get("window_hours", 24)
@@ -72,12 +72,15 @@ def build_meta(data: dict, site: str, base: str) -> str:
         "每 2 小时自动更新，支持按平台、来源筛选与关键词搜索。"
     )
     url = site.rstrip("/") + "/"
-    og_image = site.rstrip("/") + "/og.png"
+    canon = canonical or url
+    og_image = url + "og.png"
     title = "AGIgregator — AI 资讯聚合"
+    robots = "noindex,follow" if noindex else "index,follow,max-image-preview:large"
     return "\n".join(
         [
+            f'<meta name="robots" content="{robots}" />',
             f'<meta name="description" content="{esc(desc)}" />',
-            f'<link rel="canonical" href="{esc(url)}" />',
+            f'<link rel="canonical" href="{esc(canon)}" />',
             f'<meta property="og:type" content="website" />',
             f'<meta property="og:site_name" content="AGIgregator" />',
             f'<meta property="og:locale" content="zh_CN" />',
@@ -177,6 +180,16 @@ def main() -> int:
     ap.add_argument("--data", required=True, help="data/*.json 所在目录")
     ap.add_argument("--site", required=True, help="站点根 URL，例如 https://example.com")
     ap.add_argument("--base", default="/", help="部署路径前缀，默认 /")
+    ap.add_argument(
+        "--noindex",
+        action="store_true",
+        help="标记 noindex,follow 并不再生成 sitemap（用于镜像站，把权重让给主站）",
+    )
+    ap.add_argument(
+        "--canonical",
+        default=None,
+        help="canonical 指向的 URL，默认指向 --site 自身",
+    )
     args = ap.parse_args()
 
     dist = Path(args.dist)
@@ -201,7 +214,7 @@ def main() -> int:
         print("index.html 缺少 SEO_META / PRERENDER 占位标记", file=sys.stderr)
         return 1
 
-    meta = build_meta(latest, args.site, args.base)
+    meta = build_meta(latest, args.site, args.base, args.noindex, args.canonical)
     jsonld = build_jsonld(latest, args.site)
     body = build_static_body(latest, args.base)
 
@@ -211,23 +224,32 @@ def main() -> int:
     index.write_text(html_text, encoding="utf-8")
 
     generated = parse_time(latest.get("generated_at")) or datetime.now(timezone.utc)
-    sitemap = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        f"  <url>\n    <loc>{esc(args.site.rstrip('/'))}/</loc>\n"
-        f"    <lastmod>{generated.strftime('%Y-%m-%dT%H:%M:%S+00:00')}</lastmod>\n"
-        "    <changefreq>hourly</changefreq>\n    <priority>1.0</priority>\n  </url>\n"
-        "</urlset>\n"
-    )
-    (dist / "sitemap.xml").write_text(sitemap, encoding="utf-8")
 
-    robots = (
-        "User-agent: *\n"
-        "Allow: /\n"
-        "Disallow: /assets/\n"
-        "\n"
-        f"Sitemap: {args.site.rstrip('/')}/sitemap.xml\n"
-    )
+    if args.noindex:
+        # 镜像站：不交 sitemap（交一个 noindex 的 URL 只会在 GSC 里堆「已排除」），
+        # 但 robots 仍允许抓取，否则爬虫看不到页面上的 noindex 标签
+        stale = dist / "sitemap.xml"
+        if stale.exists():
+            stale.unlink()
+        robots = "User-agent: *\nAllow: /\nDisallow: /assets/\n"
+    else:
+        sitemap = (
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            f"  <url>\n    <loc>{esc(args.site.rstrip('/'))}/</loc>\n"
+            f"    <lastmod>{generated.strftime('%Y-%m-%dT%H:%M:%S+00:00')}</lastmod>\n"
+            "    <changefreq>hourly</changefreq>\n    <priority>1.0</priority>\n  </url>\n"
+            "</urlset>\n"
+        )
+        (dist / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+        robots = (
+            "User-agent: *\n"
+            "Allow: /\n"
+            "Disallow: /assets/\n"
+            "\n"
+            f"Sitemap: {args.site.rstrip('/')}/sitemap.xml\n"
+        )
+
     (dist / "robots.txt").write_text(robots, encoding="utf-8")
 
     print(f"预渲染完成：{len(latest.get('items', [])[:MAX_ITEMS])} 条 / sitemap + robots 已生成")
