@@ -36,9 +36,11 @@ export function AppBar({ theme, toggleTheme, searchQuery, onSearchChange, onShow
     <header className="sticky top-0 z-40 border-b border-hairline bg-surface/95 backdrop-blur-md dark:border-hairline-dark dark:bg-surface-dark/95">
       <div className="mx-auto max-w-3xl px-4">
         <div className="flex h-16 items-center gap-3">
-          <a href="./" className="shrink-0 select-none text-wordmark" aria-label="AGIgregator">
-            <span className="font-medium text-primary dark:text-primary-dark">AGI</span>
-            <span className="font-normal text-ink dark:text-ink-dark">gregator</span>
+          <a href="./" className="shrink-0 select-none" aria-label="AGIgregator 首页">
+            <h1 className="m-0 text-wordmark">
+              <span className="font-medium text-primary dark:text-primary-dark">AGI</span>
+              <span className="font-normal text-ink dark:text-ink-dark">gregator</span>
+            </h1>
           </a>
 
           <div className="ml-2 hidden min-w-0 flex-1 sm:block">{searchField}</div>

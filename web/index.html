@@ -8,11 +8,87 @@
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231A73E8'/><text x='50' y='54' font-family='Roboto,Helvetica,Arial,sans-serif' font-size='50' font-weight='500' fill='white' text-anchor='middle' dominant-baseline='middle'>AG</text></svg>"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AGIgregator —— AI 资讯聚合阅读器" />
-    <title>AGIgregator</title>
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#202124" media="(prefers-color-scheme: dark)" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="author" content="AGIgregator" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>AGIgregator — AI 资讯聚合</title>
+    <!-- SEO_META -->
+    <style>
+      /* 预渲染内容的兜底样式：JS 未执行时也能正常阅读，执行后由 React 接管 */
+      .ssr {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 16px 48px;
+        font-family: Roboto, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        color: #202124;
+        background: #fff;
+      }
+      .ssr h1 {
+        margin: 0;
+        font-size: 21px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .ssr h1 .accent {
+        color: #1a73e8;
+      }
+      .ssr .ssr-meta {
+        margin: 6px 0 20px;
+        font-size: 13px;
+        color: #5f6368;
+      }
+      .ssr ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .ssr li {
+        border-top: 1px solid #dadce0;
+        padding: 14px 0;
+      }
+      .ssr li .src {
+        display: block;
+        font-size: 13px;
+        color: #5f6368;
+        margin-bottom: 4px;
+      }
+      .ssr li a {
+        color: #202124;
+        text-decoration: none;
+        font-size: 17px;
+        line-height: 1.45;
+      }
+      .ssr li a:hover {
+        text-decoration: underline;
+      }
+      .ssr .more {
+        margin-top: 20px;
+        font-size: 13px;
+        color: #5f6368;
+      }
+      @media (prefers-color-scheme: dark) {
+        .ssr {
+          background: #202124;
+          color: #e8eaed;
+        }
+        .ssr li {
+          border-top-color: #3c4043;
+        }
+        .ssr li a {
+          color: #e8eaed;
+        }
+        .ssr li .src,
+        .ssr .ssr-meta,
+        .ssr .more {
+          color: #9aa0a6;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!-- PRERENDER --></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

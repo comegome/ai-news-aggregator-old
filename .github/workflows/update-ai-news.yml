@@ -53,6 +53,14 @@ jobs:
           cp ../data/latest-7d.json dist/data/
           cp ../data/source-status.json dist/data/
 
+      - name: Prerender SEO
+        run: |
+          python3 scripts/prerender.py \
+            --dist web/dist \
+            --data data \
+            --site https://comegome.github.io/ai-news-aggregator \
+            --base /ai-news-aggregator/
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
